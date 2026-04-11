@@ -1,0 +1,80 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<!-- Blur overlay -->
+<div class="modal-overlay">
+
+  <!-- Center card -->
+  <div class="modal-card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-bottom: 1rem;">
+          {% for category, message in messages %}
+            <div class="flash-msg flash-{{ category }} alert-dismissible fade show" role="alert">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <h2>Edit Student</h2>
+
+    <form method="POST" action="{{ url_for('admin.edit_student', id=student.id) }}">
+
+      <div class="mb-3">
+        <label>Name</label>
+        <input type="text" name="name" 
+               value="{{ student.name }}" 
+               class="custom-input w-100">
+      </div>
+
+      <div class="mb-3">
+        <label>Contact Number</label>
+        <input type="text" name="contact_number" 
+               value="{{ student.contact_number }}" 
+               class="custom-input w-100">
+      </div>
+
+      <div class="mb-3">
+        <label>Email</label>
+        <input type="text" name="email" 
+               value="{{ student.email }}" 
+               class="custom-input w-100">
+      </div>
+
+      <div class="mb-3">
+        <label>CGPA</label>
+        <input type="text" name="cgpa" 
+               value="{{ student.cgpa }}" 
+               class="custom-input w-100">
+      </div>
+
+      <div class="mb-3">
+        <label>Course</label>
+        <input type="text" name="course" 
+               value="{{ student.course }}" 
+               class="custom-input w-100">
+      </div>
+
+      <div class="mb-3">
+        <label>Skills</label>
+        <input type="text" name="skills" 
+               value="{{ student.skills }}" 
+               class="custom-input w-100">
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+        <a href="{{ url_for('admin.students') }}" 
+           class="btn btn-danger">Cancel</a>
+
+        <button type="submit" class="btn btn-success">
+          Save Changes
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

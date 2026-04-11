@@ -1,0 +1,83 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<!-- Blur overlay -->
+<div class="modal-overlay">
+
+  <!-- Center card -->
+  <div class="modal-card">
+
+    <h2>Company Details</h2>
+    <div class="mb-3">
+      <label class="text-muted">ID - {{ company.id }}</label>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Name</label>
+      <div>{{ company.name }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Website</label>
+      <div>{{ company.website }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">HR Contact</label>
+      <div>{{ company.hr_contact }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Status</label>
+      <div>
+        {% if company.is_approved == "approved" and not company.user.is_blacklisted %}
+          <span class="badge bg-success rounded-pill">Active</span>
+        {% elif company.user.is_blacklisted %}
+          <span class="badge bg-danger rounded-pill">Blacklisted</span>
+        {% elif company.is_approved == "pending" %}
+          <span class="badge bg-warning rounded-pill">Approval Pending</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="d-flex justify-content-end gap-2 mt-4">
+
+      <a href="{{ url_for('admin.companies') }}" 
+         class="btn-slate">
+        Close
+      </a>
+
+      <a href="{{ url_for('admin.edit_company', id=company.id) }}" 
+         class="btn btn-success">
+        Edit
+      </a>
+      {% if company.is_approved == "approved" %}
+      <form method="POST" action="{{ url_for('admin.toggle_blacklist_user', id=company.user.id) }}">
+        <button type="submit"class="btn {% if company.user.is_blacklisted %}btn-success{% else %}btn-danger{% endif %}">
+          {% if company.user.is_blacklisted %}
+            Activate
+          {% else %}
+            Blacklist
+          {% endif %}
+        </button>
+      </form>
+      {% elif company.is_approved == "pending" %}
+      <form method="POST" action="{{ url_for('admin.approve_company', id=company.id) }}">
+        <button type="submit" class="btn btn-success">
+          Approve
+        </button>
+      </form>
+      <form method="POST" action="{{ url_for('admin.reject_company', id=company.id) }}">
+        <button type="submit" class="btn btn-danger">
+          Reject
+        </button>
+      </form>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

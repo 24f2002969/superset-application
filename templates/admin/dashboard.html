@@ -1,0 +1,222 @@
+{% extends "admin/base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Dashboard</h1>
+
+
+<div class="row g-3 mb-4">
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Total Students</div>
+      <h3>{{ students }}</h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Total Companies</div>
+      <h3>{{ companies }}</h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Total Drives</div>
+      <h3>{{ drives }}</h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Total Applications</div>
+      <h3>{{ applications }}</h3>
+    </div>
+  </div>
+
+</div>
+
+<div class="row g-3 mb-4">
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Active Students</div>
+      <h4>{{ active_students }}</h4>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Active Companies</div>
+      <h4>{{ active_companies }}</h4>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Active Drives</div>
+      <h4>{{ active_drives }}</h4>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Placed Students</div>
+      <h4 class="text-success">{{ placed_students }}</h4>
+    </div>
+  </div>
+
+</div>
+
+<div class="row g-4 mb-4">
+
+  <div class="col-md-6">
+    <div class="custom-card">
+      <div class="card-title">Applications vs Jobs vs Placements</div>
+      <canvas id="mainChart"></canvas>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="custom-card">
+      <div class="card-title">Drive Status</div>
+      <canvas id="driveChart"></canvas>
+    </div>
+  </div>
+
+
+  <div class="col-md-6">
+    <div class="custom-card">
+      <div class="card-title">Application Status</div>
+      <canvas id="appChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<div class="row g-3 mb-4">
+
+  <div class="col-md-6">
+    <div class="stat-card text-center border-danger">
+      <div>Blacklisted Students</div>
+      <h4 class="text-danger">{{ blacklisted_students }}</h4>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="stat-card text-center border-danger">
+      <div>Blacklisted Companies</div>
+      <h4 class="text-danger">{{ blacklisted_companies }}</h4>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="custom-card">
+  <div class="card-title">Recent Applications</div>
+
+  {% if recent_apps %}
+    <ul class="list-group">
+      {% for app in recent_apps %}
+      <li class="list-group-item d-flex justify-content-between">
+        <span>
+          <strong style="color:white">{{ app.student.name }}(#{{ app.student.id }})</strong> applied for 
+          <strong style="color:white">{{ app.drive.job_title }} </strong> in 
+          <strong style="color:white">{{ app.drive.company.name }} - Drive #{{ app.drive.id }}</strong>
+        </span>
+        <span class="badge 
+        {% if app.status == "applied" %}bg-secondary
+        {% elif app.status == "shortlisted" %}bg-success
+        {% elif app.status == "placed" %}bg-success
+        {% elif app.status == "rejected" %}bg-danger
+        {% elif app.status == "withdrawn" %}bg-dark
+        {% endif %}">
+          {{ app.status | capitalize }}
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">No recent activity</p>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+new Chart(document.getElementById('mainChart'), {
+  type: 'bar',
+  data: {
+    labels: ["Applications", "Job Postings", "Placements"],
+    datasets: [{
+      legend: ["Applications", "Job Postings", "Placements"],
+      data: [{{ applications }}, {{ jobs }}, {{ placed_students }}],
+      backgroundColor: [
+        "#007bff",  // blue - applications
+        "#ffc107",  // yellow - job postings
+        "#28a745"   // green - placements
+      ]
+    }]
+  },
+  options: {
+    plugins: {
+      legend: {
+        display: false
+      }
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: "#ffffff"  
+        }
+      },
+      y: {
+        ticks: {
+          color: "#ffffff"  
+        }
+      }
+    }
+  }
+});
+
+
+new Chart(document.getElementById('driveChart'), {
+  type: 'pie',
+  data: {
+    labels: ["Active", "Pending", "Closed", "Rejected"],
+    datasets: [{
+      data: [{{ active_drives }}, {{ pending_drives }}, {{ closed_drives }}, {{ rejected_drives }}],
+      backgroundColor: [  
+        "#28a745",  // green - active
+        "#ffc107",  // yellow - pending
+        "#007bff",  // gray - closed
+        "#dc3545"   // red - rejected
+      ]
+    }]
+  }
+});
+
+new Chart(document.getElementById('appChart'), {
+  type: 'pie',
+  data: {
+    labels: ["Applied", "Shortlisted", "Placed", "Rejected", "Withdrawn"],
+    datasets: [{
+      data: [{{ applied }}, {{ shortlisted }}, {{ placed }}, {{ rejected }}, {{ withdrawn }}],
+      backgroundColor: [
+        "#007bff",  // blue - applied
+        "#ffc107",  // yellow - shortlisted
+        "#28a745",  // green - placed
+        "#dc3545",  // red - rejected
+        "#000000"   // black - withdrawn
+      ]
+    }]
+  }
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,111 @@
+<!-- Done -->
+
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<!-- 🔹 SUMMARY -->
+<h2 class="mb-3">Blacklist Overview</h2>
+
+<div class="row mb-4">
+  <div class="col-md-6">
+    <div class="card shadow-sm text-center">
+      <div class="card-body">
+        <h5>Blacklisted Students</h5>
+        <h3 class="text-danger">{{ count_std }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card shadow-sm text-center">
+      <div class="card-body">
+        <h5>Blacklisted Companies</h5>
+        <h3 class="text-danger">{{ count_comp }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🔹 STUDENTS -->
+<h3 class="mb-3">Blacklisted Students</h3>
+
+<div class="row">
+  {% if students %}
+    {% for user in students %}
+    <div class="col-md-6 col-lg-4 mb-3">
+      <div class="card shadow-sm border-danger h-100">
+
+        <div class="card-body d-flex flex-column">
+          <h5>{{ user.username }}</h5>
+
+          <p class="mb-1">
+            <strong>{{ user.student.course }}</strong><br>
+            <span class="text-muted">{{ user.student.skills }}</span>
+          </p>
+
+          <small class="text-muted">
+            CGPA: {{ user.student.cgpa }}
+          </small>
+
+          <!-- Actions -->
+          <div class="mt-auto pt-3 border-top">
+            <form method="POST" action="{{ url_for('admin.toggle_blacklist_user', id=user.id) }}">
+              <button class="btn btn-success btn-sm w-20">
+                Activate
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">No blacklisted students</p>
+  {% endif %}
+</div>
+
+<hr class="my-4">
+
+<!-- 🔹 COMPANIES -->
+<h3 class="mb-3">Blacklisted Companies</h3>
+
+<div class="row">
+  {% if companies %}
+    {% for user in companies %}
+    <div class="col-md-6 col-lg-4 mb-3">
+      <div class="card shadow-sm border-danger h-100">
+
+        <div class="card-body d-flex flex-column">
+          <h5>{{ user.company.name }}</h5>
+
+          <p class="mb-1">
+            <strong>{{ user.company.website }}</strong>
+          </p>
+
+          <small class="text-muted">
+            HR: {{ user.company.hr_contact }}
+          </small>
+
+          <!-- Actions -->
+          <div class="mt-auto pt-3 border-top">
+            <form method="POST" action="{{ url_for('admin.toggle_blacklist_user', id=user.id) }}">
+              <button class="btn btn-success btn-sm w-20">
+                Activate
+              </button>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">No blacklisted companies</p>
+  {% endif %}
+</div>
+
+{% endblock %}

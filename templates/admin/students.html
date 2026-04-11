@@ -1,0 +1,66 @@
+<!-- DONE -->
+
+{% extends "admin/base.html" %}
+{% block content %}
+<h2>Students</h2>
+
+<form method="GET" action="{{ url_for('admin.students') }}">
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search students..." name="q" value="{{ search or '' }}">
+    <button class="btn btn-outline-secondary" type="submit">Search</button>
+  </div>
+</form>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Contact</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for student in students %}
+    <tr>
+      <td>{{ student.id }}</td>
+      <td>{{ student.name }}</td>
+      <td>{{ student.email }}</td>
+      <td>{{ student.contact_number }}</td>
+
+      <td>
+        {% if student.user.is_blacklisted %}
+          <span class="badge bg-danger">Blacklisted</span>
+        {% else %}
+          <span class="badge bg-success">Active</span>
+        {% endif %}
+      </td>
+      <td>
+        <div class="d-flex gap-2">
+          <a href="{{ url_for('admin.view_student', id=student.id) }}"
+            class="btn-slate">
+            View
+          </a>
+          <a href="{{ url_for('admin.edit_student', id=student.id) }}"
+            class="btn btn-info">
+            Edit
+          </a>
+          <form method="POST" action="{{ url_for('admin.toggle_blacklist_user', id=student.user.id) }}">
+            <button class="btn {% if student.user.is_blacklisted %}btn-success{% else %}btn-danger{% endif %}">
+              {% if student.user.is_blacklisted %}
+                Activate
+              {% else %}
+                Blacklist
+              {% endif %}
+            </button>
+          </form>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

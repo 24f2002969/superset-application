@@ -1,0 +1,46 @@
+<!-- DONE -->
+
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>Applications</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Student</th>
+      <th>Drive</th>
+      <th>Job Title</th>
+      <th>Date Applied</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for app in applications %}
+    <tr>
+      <td>{{ app.id }}</td>
+      <td>{{ app.student.name }}</td>
+      <td>{{ app.drive.company.name }}(#{{ app.drive.id }})</td>
+      <td>{{ app.drive.job_title }}</td>
+      <td>{{ app.applied_on }}</td>
+      <td>
+        <span class="badge 
+          {% if app.status == 'placed' %}bg-success
+          {% elif app.status == 'rejected' or app.status == 'withdrawn' %}bg-danger
+          {% elif app.status == 'shortlisted' %}bg-warning
+          {% else %}bg-secondary{% endif %}">
+          {{ app.status }}
+        </span>
+      </td>
+      <td>
+        <a href="{{ url_for('admin.view_application', id=app.id) }}" class="btn btn-sm btn-info">View</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

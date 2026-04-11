@@ -1,0 +1,67 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<div class="modal-overlay">
+
+  <div class="modal-card">
+
+
+    <h2>Application #{{ application.id }}</h2>
+
+
+    <div class="mb-3">
+      <label class="text-muted">Student</label>
+      <div>{{ application.student.name }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Drive ID</label>
+      <div>#{{ application.drive.id }}</div>
+    </div>
+
+
+    <div class="mb-3">
+      <label class="text-muted">Company</label>
+      <div>{{ application.drive.company.name }}</div>
+    </div>
+
+
+    <div class="mb-3">
+      <label class="text-muted">Job Posting</label>
+      <div>{{ application.drive.job_title }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Status</label>
+      <div>
+        <span class="badge 
+          {% if application.status == 'placed' %}bg-success
+          {% elif application.status == 'shortlisted' %}bg-info
+          {% elif application.status == 'rejected' %}bg-danger
+          {% else %}bg-secondary
+          {% endif %}">
+          {{ application.status | capitalize }}
+        </span>
+      </div>
+    </div>
+
+
+    <div class="mb-3">
+      <label class="text-muted">Applied On</label>
+      <div>
+        {{ application.applied_on.strftime('%d-%m-%Y %H:%M') }}
+      </div>
+    </div>
+
+    <!-- 🔹 Close Button -->
+    <div class="d-flex justify-content-end mt-4">
+      <a href="{{ url_for('admin.applications') }}" class="btn-slate">
+        Close
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

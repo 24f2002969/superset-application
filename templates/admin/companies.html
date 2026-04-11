@@ -1,0 +1,114 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h2 class="mb-3">Pending Approvals</h2>
+<div class="row">
+  {% for company in pending_companies %}
+  {% if not company.user.is_blacklisted %}
+  <div class="col-md-6 col-lg-4 mb-3">
+    <div class="card shadow-sm h-100 border-warning">
+      <div class="card-body">
+        <h5 class="card-title">
+          {{ company.name }}
+        </h5>
+        <p class="mb-1">
+          <strong>{{ company.website }}</strong><br>
+        </p>
+        <small class="text-muted">
+          HR Contact : {{ company.hr_contact }}
+        </small>
+        <div class="mt-3 d-flex gap-2">
+          <a href="{{ url_for('admin.view_company', id=company.id) }}" class="btn btn-sm btn-info">View</a>
+          <form method="POST" action="{{ url_for('admin.approve_company', id=company.id) }}">
+            <button class="btn btn-success btn-sm">Approve</button>
+          </form>
+          <form method="POST" action="{{ url_for('admin.reject_company', id=company.id) }}">
+            <button class="btn btn-danger btn-sm">Reject</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% endif %}
+  {% endfor %}
+</div>
+<hr class="my-4">
+
+<h2 class="mb-3">All Companies</h2>
+<form method="GET" action="{{ url_for('admin.companies') }}">
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search companies..." name="q" value="{{ search or '' }}">
+    <button class="btn btn-outline-secondary" type="submit">Search</button>
+  </div>
+</form>
+<div class="row">
+  {% for company in companies %}
+  <div class="col-md-6 col-lg-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <!-- 🔹 Header -->
+        <h5 class="fw-bold">{{ company.name }} - ID: {{ company.id }}</h5>
+        <p class="mb-1">
+          <strong>{{ company.website }}</strong><br>
+        </p>
+        <small class="text-muted">
+          HR Contact : {{ company.hr_contact }}
+        </small>
+        <!-- 🔹 Status -->
+        <div class="mt-2">
+          <span class="badge 
+            {% if company.is_approved == "approved" and not company.user.is_blacklisted%}bg-success
+            {% elif company.user.is_blacklisted %}bg-danger text-dark
+            {% elif company.is_approved == "pending" %}bg-info
+            {% elif company.is_approved == "rejected" %}bg-danger
+            {% endif %}">
+            {% if company.is_approved == "approved" and not company.user.is_blacklisted %}Approved
+            {% elif company.user.is_blacklisted %}Blacklisted
+            {% elif company.is_approved == "pending" %}Pending
+            {% elif company.is_approved == "rejected" %}Rejected
+            {% endif %}
+          </span>
+        </div>
+        <!-- 🔹 Actions -->
+        <div class="mt-auto pt-3 border-top">
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted small">Actions</span>
+            <div class="d-flex gap-2">
+              <a href="{{ url_for('admin.view_company', id=company.id) }}" class="btn btn-info btn-sm">View</a>
+              <a href="{{ url_for('admin.edit_company', id=company.id) }}" class="btn btn-warning btn-sm">Edit</a>
+              {% if company.is_approved == "pending" %}
+                <form method="POST" action="{{ url_for('admin.approve_company', id=company.id) }}">
+                  <button class="btn btn-success btn-sm">Approve</button>
+                </form>
+                <form method="POST" action="{{ url_for('admin.reject_company', id=company.id) }}">
+                  <button class="btn btn-danger btn-sm">Reject</button>
+                </form>
+              {% elif company.is_approved == "rejected" %}
+              {% else %}
+                <form method="POST" action="{{ url_for('admin.toggle_blacklist_user', id=company.user.id) }}">
+                  <button class="btn {% if company.user.is_blacklisted %}btn-success{% else %}btn-danger{% endif %}">
+                    {% if company.user.is_blacklisted %}
+                      Activate
+                    {% else %}
+                      Blacklist
+                    {% endif %}
+                  </button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+

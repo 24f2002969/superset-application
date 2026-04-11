@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h2>Logs</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Action</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for log in logs %}
+    <tr>
+      <!-- ID -->
+      <td>{{ log.id }}</td>
+      <!-- 🔥 Action -->
+      <td>
+        {% if log.action in ["Rejected", "Blacklisted"] %}
+          <span class="text-danger">
+        {% elif log.action in ["Approved", "Activated", "Registered", "Created", "Placed","Applied","Shortlisted"] %}
+          <span class="text-success">
+        {% elif log.action in ["Closed", "Details Updated", "Withdrawn"] %}
+          <span class="text-warning">
+        {% else %}
+          <span>
+        {% endif %}
+          <!-- 🔹 Custom Format -->
+          {{ log.user.role | capitalize }} 
+          - {{ log.user.username }}
+          - {{ log.action }} 
+          - {{ log.target_type | capitalize }}:{{ log.target_id }}
+
+        </span>
+      </td>
+      <td>{{ log.timestamp.strftime('%d-%m-%Y %H:%M') }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

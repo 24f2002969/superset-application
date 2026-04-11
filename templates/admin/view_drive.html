@@ -1,0 +1,111 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<div class="modal-overlay">
+
+  <div class="modal-card">
+
+
+    <h2>Drive #{{ drive.id }}</h2>
+
+ 
+    <div class="mb-3">
+      <label class="text-muted">Status</label>
+      <div>
+        <span class="badge 
+          {% if drive.status == 'active' %}bg-success
+          {% elif drive.status == 'pending' %}bg-warning text-dark
+          {% else %}bg-secondary
+          {% endif %}">
+          {{ drive.status | capitalize }}
+        </span>
+      </div>
+    </div>
+
+
+    <div class="mb-3">
+      <label class="text-muted">Company</label>
+      <div>{{ drive.company.name }}</div>
+    </div>
+
+
+    <div class="mb-3">
+      <label class="text-muted">Job Title</label>
+      <div>{{ drive.job_title }}</div>
+    </div>
+
+
+    <div class="mb-3">
+      <label class="text-muted">Vacancies</label>
+      <div>{{ drive.vacancies }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Eligibility</label>
+      <div>
+        {{ drive.eligibility }} <br>
+        <small class="text-muted">Min CGPA: {{ drive.eligibility_cgpa }}</small>
+      </div>
+    </div>
+
+
+    <div class="mb-3">
+      <label class="text-muted">Deadline</label>
+      <div class="text-danger fw-bold">
+        {{ drive.deadline.strftime('%d-%m-%Y') }}
+      </div>
+    </div>
+
+
+    <div class="mb-3">
+      <label class="text-muted">Description</label>
+      <div>{{ drive.description }}</div>
+    </div>
+
+
+    {% if drive.status in ['active', 'closed'] %}
+    <div class="mb-3">
+      <label class="text-muted">Applications</label>
+      <div>
+        <span class="badge_appli bg-primary">
+          {{ drive.applications|length }} Applications
+        </span>
+      </div>
+    </div>
+    {% endif %}
+
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+
+
+      <a href="{{ url_for('admin.drives') }}" class="btn-slate">
+        Close
+      </a>
+
+      {% if drive.status == 'pending' %}
+      <form method="POST" action="{{ url_for('admin.approve_drive', id=drive.id) }}">
+        <button class="btn btn-success">Approve</button>
+      </form>
+      {% endif %}
+
+
+      {% if drive.status == 'active' %}
+      <form method="POST" action="{{ url_for('admin.close_drive', id=drive.id) }}">
+        <button class="btn btn-warning">Close Drive</button>
+      </form>
+      {% endif %}
+
+
+      {% if drive.status == 'pending' %}
+      <form method="POST" action="{{ url_for('admin.reject_drive', id=drive.id) }}">
+        <button class="btn btn-danger">Reject</button>
+      </form>
+      {% endif %}
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

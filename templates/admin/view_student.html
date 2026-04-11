@@ -1,0 +1,97 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<!-- Blur overlay -->
+<div class="modal-overlay">
+
+  <!-- Center card -->
+  <div class="modal-card">
+
+    <h2>Student Details</h2>
+    <div class="mb-3">
+      <label class="text-muted">ID - {{ student.id }}</label>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Name</label>
+      <div>{{ student.name }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Contact</label>
+      <div>{{ student.contact_number }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Email</label>
+      <div>{{ student.email }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">CGPA</label>
+      <div>{{ student.cgpa }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Resume</label>
+      <div>
+        {% if student.resume %}
+          <a href="{{ url_for('static', filename=student.resume[7:]) }}" target="_blank">
+            View Resume
+          </a>
+        {% else %}
+          No resume uploaded.
+        {% endif %}
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="text-muted">Course</label>
+      <div>{{ student.course }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Skills</label>
+      <div>{{ student.skills }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Status</label>
+      <div>
+        {% if student.user.is_blacklisted %}
+          <span class="pill pill-rejected">Blacklisted</span>
+        {% else %}
+          <span class="pill pill-active">Active</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="d-flex justify-content-end gap-2 mt-4">
+
+      <a href="{{ url_for('admin.students') }}" 
+         class="btn-slate">
+        Close
+      </a>
+
+      <a href="{{ url_for('admin.edit_student', id=student.id) }}" 
+         class="btn btn-success">
+        Edit
+      </a>
+
+      <form method="POST" action="{{ url_for('admin.toggle_blacklist_user', id=student.user.id) }}">
+        <button type="submit"class="btn {% if student.user.is_blacklisted %}btn-success{% else %}btn-danger{% endif %}">
+          {% if student.user.is_blacklisted %}
+            Activate
+          {% else %}
+            Blacklist
+          {% endif %}
+        </button>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

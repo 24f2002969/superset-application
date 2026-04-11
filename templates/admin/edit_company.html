@@ -1,0 +1,59 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+
+<!-- Blur overlay -->
+<div class="modal-overlay">
+
+  <!-- Center card -->
+  <div class="modal-card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-bottom: 1rem;">
+          {% for category, message in messages %}
+            <div class="flash-msg flash-{{ category }} alert-dismissible fade show" role="alert">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <h2>Edit Company</h2>
+
+    <form method="POST" action="{{ url_for('admin.edit_company', id=company.id) }}">
+
+      <div class="mb-3">
+        <label>Name</label>
+        <input type="text" name="name" 
+               value="{{ company.name }}" 
+               class="custom-input w-100">
+      </div>
+
+      <div class="mb-3">
+        <label>Website</label>
+        <input type="text" name="website" 
+               value="{{ company.website }}" 
+               class="custom-input w-100">
+      </div>
+
+      <div class="mb-3">
+        <label>HR Contact</label>
+        <input type="text" name="hr_contact" 
+               value="{{ company.hr_contact }}" 
+               class="custom-input w-100">
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+        <a href="{{ url_for('admin.companies') }}" 
+           class="btn btn-danger">Cancel</a>
+
+        <button type="submit" class="btn btn-success">
+          Save Changes
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}
