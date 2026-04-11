@@ -1,0 +1,238 @@
+<!-- done  -->
+
+{% extends "company/base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4 display-1">Welcome back</h1>
+
+
+<div class="row g-3 mb-4">
+
+  <div class="col-md-6">
+    <div class="stat-card text-center">
+      <div>Total Drives</div>
+      <h3>{{ total_drives }}</h3>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="stat-card text-center">
+      <div>Total Applications</div>
+      <h3>{{ total_applications }}</h3>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="row g-4 mb-4">
+
+  <!-- Application Chart -->
+  <div class="col-md-6">
+    <div class="custom-card">
+      <div class="card-title">Application Status</div>
+      <canvas id="appChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Drive Chart -->
+  <div class="col-md-6">
+    <div class="custom-card">
+      <div class="card-title">Drive Status</div>
+      <canvas id="driveChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<div class="custom-card mb-4">
+  <div class="card-title">Recent Drives</div>
+
+  {% if recent_drives %}
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Job Title</th>
+          <th>Deadline</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for drive in recent_drives %}
+        <tr>
+          <td>{{ drive.id }}</td>
+          <td>{{ drive.job_title }}</td>
+          <td>{{ drive.deadline.strftime('%d-%m-%Y') }}</td>
+
+          <td>
+            <span class="badge 
+              {% if drive.status == 'active' %}bg-success
+              {% elif drive.status == 'pending' %}bg-warning
+              {% elif drive.status == 'rejected' %}bg-danger
+              {% else %}bg-secondary{% endif %}">
+              {{ drive.status | capitalize }}
+            </span>
+          </td>
+
+
+          <td class="d-flex gap-2 flex-wrap">
+
+            <a href="{{ url_for('company.view_drive', id=drive.id) }}" class="btn btn-info btn-sm">
+              View
+            </a>
+
+            {% if drive.status == 'pending' %}
+            <a href="{{ url_for('company.edit_drive', id=drive.id) }}" class="btn btn-warning btn-sm">
+              Edit
+            </a>
+
+            {% elif drive.status == 'active' %}
+            <a href="{{ url_for('company.edit_drive', id=drive.id) }}" class="btn btn-warning btn-sm">
+              Edit
+            </a>
+            <form action="{{ url_for('company.close_drive', id=drive.id) }}" method="POST">
+              <button type="submit" class="btn btn-danger btn-sm">
+                End
+              </button>
+            </form>
+
+            {% else %}
+            {% endif %}
+
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="text-muted">No drives yet</p>
+  {% endif %}
+
+</div>
+
+<div class="custom-card">
+  <div class="card-title">Recent Applications</div>
+
+  {% if recent_applications %}
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Student</th>
+          <th>Drive</th>
+          <th>Date Applied</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for app in recent_applications %}
+        <tr>
+          <td>{{ app.id }}</td>
+
+
+          <td>{{ app.student.name }}</td>
+
+          <td>{{ app.drive.job_title }}</td>
+          <td>{{ app.applied_on.strftime('%d-%m-%Y') }}</td>
+
+          <td>
+            <span class="badge 
+              {% if app.status == 'placed' %}bg-success
+              {% elif app.status == 'rejected' %}bg-danger
+              {% elif app.status == 'withdrawn' %}bg-warning
+              {% elif app.status == 'shortlisted' %}bg-info
+              {% else %}bg-primary{% endif %}">
+              {{ app.status }}
+            </span>
+          </td>
+
+          <td class="d-flex gap-2 flex-wrap">
+
+            <a href="{{ url_for('company.view_application', id=app.id) }}" class="btn btn-info btn-sm">View</a>
+
+            {% if app.status == 'applied' %}
+            <form action="{{ url_for('company.shortlist_application', id=app.id) }}" method="POST">
+              <button type="submit" class="btn btn-success btn-sm">Shortlist</button>
+            </form>
+
+            <form action="{{ url_for('company.reject_application', id=app.id) }}" method="POST">
+              <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+            </form>
+
+            {% elif app.status == 'shortlisted' %}
+            <form action="{{ url_for('company.hire_application', id=app.id) }}" method="POST">
+              <button type="submit" class="btn btn-success btn-sm">Hire</button>
+            </form>
+
+            <form action="{{ url_for('company.reject_application', id=app.id) }}" method="POST">
+              <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+            </form>
+
+            {% else %}
+            {% endif %}
+
+          </td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="text-muted">No applications yet</p>
+  {% endif %}
+
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+new Chart(document.getElementById('appChart'), {
+  type: 'pie',
+  data: {
+    labels: ["Applied", "Shortlisted", "Placed", "Rejected", "Withdrawn"],
+    datasets: [{
+      data: [{{ applied }}, {{ shortlisted }}, {{ placed }}, {{ rejected }}, {{ withdrawn }}],
+      backgroundColor: [
+        "#007bff",  // blue - applied
+        "#ffc107",  // yellow - shortlisted
+        "#28a745",  // green - placed
+        "#dc3545",  // red - rejected
+        "#000000"   // black - withdrawn
+      ]
+    }]
+  }
+});
+
+new Chart(document.getElementById('driveChart'), {
+  type: 'pie',
+  data: {
+    labels: ["Pending", "Approved", "Closed", "Rejected"],
+    datasets: [{
+      data: [{{ pending }}, {{ approved }}, {{ closed }}, {{ rejected_drives }}],
+      backgroundColor: [
+        "#ffc107",  // yellow - pending
+        "#28a745",  // green - approved
+        "#6c757d",  // gray - closed
+        "#dc3545"   // red - rejected
+      ]
+    }]
+  }
+});
+
+</script>
+{% endblock %}

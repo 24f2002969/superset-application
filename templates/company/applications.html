@@ -1,0 +1,74 @@
+<!-- Done -->
+
+{% extends "company/base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Applications</h2>
+{% for drive in drives %}
+<div class="card shadow-sm mb-2 w-100">
+  <div class="card-body d-flex justify-content-between align-items-center">
+    <h1 class="fw-bold mb-0">
+      Drive #{{ drive.id }} - {{ drive.job_title }}
+    </h1>
+    <div class="fw-bold text-primary">
+      Vacancies: {{ drive.vacancies }}
+    </div>
+  </div>
+</div>
+{% if drive.applications %}
+<div class="table-responsive mb-4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Student</th>
+        <th>Date Applied</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for app in drive.applications %}
+      <tr>
+        <td>{{ app.id }}</td>
+        <td>{{ app.student.name }}</td>
+        <td>{{ app.applied_on.strftime('%d-%m-%Y') }}</td>
+        <td>
+          <span class="badge 
+            {% if app.status == 'placed' %}bg-success
+            {% elif app.status == 'rejected' %}bg-danger
+            {% elif app.status == 'withdrawn' %}bg-warning
+            {% elif app.status == 'shortlisted' %}bg-info
+            {% else %}bg-secondary{% endif %}">
+            {{ app.status }}
+          </span>
+        </td>
+        <td class="d-flex gap-2 flex-wrap">
+          <a href="{{ url_for('company.view_application', id=app.id) }}" class="btn btn-success btn-sm">View</a>
+          {% if app.status == 'applied' %}
+          <form action="{{ url_for('company.shortlist_application', id=app.id) }}" method="POST">
+            <button type="submit" class="btn btn-success btn-sm">Shortlist</button>
+          </form>
+          {% elif app.status == 'shortlisted' %}
+          <form action="{{ url_for('company.hire_application', id=app.id) }}" method="POST">
+            <button type="submit" class="btn btn-success btn-sm">Hire</button>
+          </form>
+          {% endif %}
+          {% if app.status != 'rejected' and app.status != 'withdrawn' and app.status != 'placed' %}
+          <form action="{{ url_for('company.reject_application', id=app.id) }}" method="POST">
+            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p class="text-muted mb-4">No applications for this drive.</p>
+{% endif %}
+
+{% endfor %}
+
+{% endblock %}

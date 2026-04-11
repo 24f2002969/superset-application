@@ -1,0 +1,43 @@
+{% extends "company/base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Notifications</h2>
+
+{% if logs %}
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Activity</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td>{{ log.id }}</td>
+        <td>
+          {% if log.action in ["Rejected", "Blacklisted"] %}
+            <span class="text-danger">
+          {% elif log.action in ["Applied", "Shortlisted", "Placed", "Approved"] %}
+            <span class="text-success">
+          {% elif log.action in ["Withdrawn", "Details Updated"] %}
+            <span class="text-warning">
+          {% else %}
+            <span>
+          {% endif %}
+            {{ log.user.username }} {{ log.action }} — {{ log.target_type | capitalize }} #{{ log.target_id }}
+          </span>
+        </td>
+        <td>{{ log.timestamp.strftime('%d-%m-%Y %H:%M') }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+  <p class="text-muted">No notifications yet.</p>
+{% endif %}
+
+{% endblock %}

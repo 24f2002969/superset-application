@@ -1,0 +1,78 @@
+{% extends "company/base.html" %}
+
+{% block content %}
+
+<div class="modal-overlay">
+  <div class="modal-card">
+
+    <h2>Drive #{{ drive.id }}</h2>
+
+    <div class="mb-3">
+      <label class="text-muted">Status</label>
+      <div>
+        <span class="badge 
+          {% if drive.status == 'active' %}bg-success
+          {% elif drive.status == 'pending' %}bg-warning text-dark
+          {% elif drive.status == 'rejected' %}bg-danger
+          {% else %}bg-warning{% endif %}">
+          {{ drive.status | capitalize }}
+        </span>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Job Title</label>
+      <div>{{ drive.job_title }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Vacancies</label>
+      <div>{{ drive.vacancies }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Description</label>
+      <div>{{ drive.description }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Eligibility</label>
+      <div>{{ drive.eligibility }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Minimum CGPA</label>
+      <div>{{ drive.eligibility_cgpa }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Deadline</label>
+      <div class="text-danger fw-bold">{{ drive.deadline.strftime('%d-%m-%Y') }}</div>
+    </div>
+
+    {% if drive.status in ['active', 'closed'] %}
+    <div class="mb-3">
+      <label class="text-muted">Applications</label>
+      <div><span class="badge bg-primary">{{ drive.applications | length }} Applications</span></div>
+    </div>
+    {% endif %}
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <a href="{{ url_for('company.drives') }}" class="btn btn-secondary">Back</a>
+
+      {% if drive.status == 'pending' %}
+      <a href="{{ url_for('company.edit_drive', id=drive.id) }}" class="btn btn-warning">Edit</a>
+      {% endif %}
+
+      {% if drive.status == 'active' %}
+      <a href="{{ url_for('company.edit_drive', id=drive.id) }}" class="btn btn-warning">Edit</a>
+      <form method="POST" action="{{ url_for('company.close_drive', id=drive.id) }}">
+        <button type="submit" class="btn btn-danger">Close Drive</button>
+      </form>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "company/base.html" %}
+
+{% block content %}
+
+<div class="modal-overlay">
+  <div class="modal-card">
+
+    <h2>Application #{{ application.id }}</h2>
+
+    <div class="mb-3">
+      <label class="text-muted">Student</label>
+      <div>{{ application.student.name }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Email</label>
+      <div>{{ application.student.email }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Contact</label>
+      <div>{{ application.student.contact_number }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">CGPA</label>
+      <div>{{ application.student.cgpa }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Skills</label>
+      <div>{{ application.student.skills or '—' }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Course</label>
+      <div>{{ application.student.course or '—' }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Resume</label>
+      <div>
+        {% if application.student.resume %}
+          <a href="{{ url_for('static', filename=application.student.resume[7:]) }}" target="_blank" class="btn btn-outline-primary btn-sm">
+            View Resume
+          </a>
+        {% else %}
+          No resume uploaded.
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Drive</label>
+      <div>{{ application.drive.job_title }} — Drive #{{ application.drive.id }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Applied On</label>
+      <div>{{ application.applied_on.strftime('%d-%m-%Y %H:%M') }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Status</label>
+      <div>
+        <span class="badge 
+          {% if application.status == 'placed' %}bg-success
+          {% elif application.status == 'shortlisted' %}bg-info
+          {% elif application.status == 'rejected' or application.status == 'withdrawn' %}bg-danger
+          {% else %}bg-secondary{% endif %}">
+          {{ application.status | capitalize }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <a href="{{ url_for('company.applications') }}" class="btn btn-secondary">Back</a>
+
+      {% if application.status == 'applied' %}
+      <form method="POST" action="{{ url_for('company.shortlist_application', id=application.id) }}">
+        <button type="submit" class="btn btn-success">Shortlist</button>
+      </form>
+      <form method="POST" action="{{ url_for('company.reject_application', id=application.id) }}">
+        <button type="submit" class="btn btn-danger">Reject</button>
+      </form>
+      {% elif application.status == 'shortlisted' %}
+      <form method="POST" action="{{ url_for('company.hire_application', id=application.id) }}">
+        <button type="submit" class="btn btn-success">Hire</button>
+      </form>
+      <form method="POST" action="{{ url_for('company.reject_application', id=application.id) }}">
+        <button type="submit" class="btn btn-danger">Reject</button>
+      </form>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

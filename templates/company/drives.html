@@ -1,0 +1,178 @@
+<!-- Done -->
+
+{% extends "company/base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">Drives</h2>
+
+<!--Approval Pending -->
+{% if pending_drives %}
+<h4 class="mb-2">Approval Pending</h4>
+
+<div class="table-responsive mb-4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Job Offering</th>
+        <th>Vacancies</th>
+        <th>Eligibility</th>
+        <th>CGPA Required</th>
+        <th>Deadline</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for drive in pending_drives %}
+      <tr>
+        <td>{{ drive.id }}</td>
+        <td>{{ drive.job_title }}</td>
+        <td>{{ drive.vacancies }}</td>
+        <td>{{ drive.eligibility }}</td>
+        <td>{{ drive.eligibility_cgpa }}</td>
+        <td>{{ drive.deadline.strftime('%d-%m-%Y') }}</td>
+        <td class="d-flex gap-2">
+          <a href="{{ url_for('company.view_drive', id=drive.id) }}" class="btn btn-info btn-sm">
+            View
+          </a>
+          <a href="{{ url_for('company.edit_drive', id=drive.id) }}" class="btn btn-warning btn-sm">
+            Edit
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endif %}
+
+
+<!-- Running Drives -->
+ {% if approved_drives %}
+<h4 class="mb-2">Running Drives</h4>
+
+<div class="table-responsive mb-4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Job Offering</th>
+        <th>Vacancies</th>
+        <th>Eligibility</th>
+        <th>CGPA Required</th>
+        <th>Deadline</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for drive in approved_drives %}
+      <tr>
+        <td>{{ drive.id }}</td>
+        <td>{{ drive.job_title }}</td>
+        <td>{{ drive.vacancies }}</td>
+        <td>{{ drive.eligibility }}</td>
+        <td>{{ drive.eligibility_cgpa }}</td>
+        <td>{{ drive.deadline.strftime('%d-%m-%Y') }}</td>
+        <td class="d-flex gap-2">
+          <a href="{{ url_for('company.view_drive', id=drive.id) }}" class="btn btn-info btn-sm">
+            View
+          </a>
+          <a href="{{ url_for('company.edit_drive', id=drive.id) }}" class="btn btn-warning btn-sm">
+            Edit
+          </a>
+          <form action="{{ url_for('company.close_drive', id=drive.id) }}" method="POST">
+            <button type="submit" class="btn btn-danger btn-sm">
+              End
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+
+<!--  Closed Drives -->
+  {% if closed_drives %}
+<h4 class="mb-2">Closed Drives</h4>
+
+<div class="table-responsive mb-4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Job Offering</th>
+        <th>Vacancies</th>
+        <th>Eligibility</th>
+        <th>CGPA Required</th>
+        <th>Deadline</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for drive in closed_drives %}
+      <tr>
+        <td>{{ drive.id }}</td>
+        <td>{{ drive.job_title }}</td>
+        <td>{{ drive.vacancies }}</td>
+        <td>{{ drive.eligibility }}</td>
+        <td>{{ drive.eligibility_cgpa }}</td>
+        <td>{{ drive.deadline.strftime('%d-%m-%Y') }}</td>
+        <td>
+          <a href="{{ url_for('company.view_drive', id=drive.id) }}" class="btn btn-info btn-sm">
+            View
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endif %}
+
+
+<!-- Rejected Drives -->
+ {% if rejected_drives %}
+<h4 class="mb-2">Rejected Drives</h4>
+
+<div class="table-responsive mb-4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Job Offering</th>
+        <th>Vacancies</th>
+        <th>Eligibility</th>
+        <th>CGPA Required</th>
+        <th>Deadline</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for drive in rejected_drives %}
+      <tr>
+        <td>{{ drive.id }}</td>
+        <td>{{ drive.job_title }}</td>
+        <td>{{ drive.vacancies }}</td>
+        <td>{{ drive.eligibility }}</td>
+        <td>{{ drive.eligibility_cgpa }}</td>
+        <td>{{ drive.deadline.strftime('%d-%m-%Y') }}</td>
+        <td>
+           <a href="{{ url_for('company.view_drive', id=drive.id) }}" class="btn btn-info btn-sm">
+            View
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endif %}
+
+{% endblock %}

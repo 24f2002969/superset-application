@@ -1,0 +1,61 @@
+{% extends "company/base.html" %}
+
+{% block content %}
+
+<div class="modal-overlay">
+  <div class="modal-card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-bottom: 1rem;">
+          {% for category, message in messages %}
+            <div class="flash-msg flash-{{ category }} alert-dismissible fade show" role="alert">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <h2>Create Drive</h2>
+
+    <form method="POST" action="{{ url_for('company.create_drive') }}">
+
+      <div class="mb-3">
+        <label>Job Title</label>
+        <input type="text" name="job_title" class="custom-input w-100" required placeholder="e.g. Software Engineer">
+      </div>
+
+      <div class="mb-3">
+        <label>Vacancies</label>
+        <input type="number" name="vacancies" class="custom-input w-100" min="1" value="1" required>
+      </div>
+
+      <div class="mb-3">
+        <label>Description</label>
+        <textarea name="description" class="custom-input w-100" rows="3" placeholder="Job description...">No Description</textarea>
+      </div>
+
+      <div class="mb-3">
+        <label>Eligibility Criteria</label>
+        <input type="text" name="eligibility" class="custom-input w-100" placeholder="e.g. B.Tech CSE / Any branch">
+      </div>
+
+      <div class="mb-3">
+        <label>Minimum CGPA <small class="text-muted">(0.0 – 10.0)</small></label>
+        <input type="number" name="eligibility_cgpa" class="custom-input w-100" step="0.01" min="0" max="10" value="0.0">
+      </div>
+
+      <div class="mb-3">
+        <label>Application Deadline</label>
+        <input type="date" name="deadline" class="custom-input w-100" required>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <a href="{{ url_for('company.drives') }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-success">Submit for Approval</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}
