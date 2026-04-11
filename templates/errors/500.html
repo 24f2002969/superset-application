@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error 500 - Internal Server Error</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #ffffff;
+      font-family: "Segoe UI", sans-serif;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    .container img {
+      width: 300px;
+      max-width: 90%;
+      margin-bottom: 20px;
+    }
+
+    .home-btn {
+      padding: 10px 22px;
+      background: #ff7a00;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s ease;
+    }
+
+    .home-btn:hover {
+      background: #e66a00;
+      transform: translateY(-2px);
+    }
+  </style>
+
+</head>
+<body>
+
+  <div class="container">
+
+
+<img src="{{ url_for('static', filename='images/500.png') }}" alt="Error 500, Internal Server Error">
+
+<br>
+
+<a href="/" class="home-btn">Go to Home</a>
+
+  </div>
+
+</body>
+</html>
