@@ -1,0 +1,73 @@
+{% extends "student/base.html" %}
+
+{% block content %}
+
+<div class="modal-overlay">
+  <div class="modal-card">
+
+    <h2>Application #{{ application.id }}</h2>
+
+    <div class="mb-3">
+      <label class="text-muted">Company</label>
+      <div>{{ application.drive.company.name }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Job</label>
+      <div>{{ application.drive.job_title }} — Drive #{{ application.drive.id }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Description</label>
+      <div>{{ application.drive.description or '—' }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Required CGPA</label>
+      <div>{{ application.drive.eligibility_cgpa }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Website</label>
+      <div>{{ application.drive.company.website }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="text-muted">HR Contact</label>
+      <div>{{ application.drive.company.hr_contact }}</div>
+    </div>
+
+
+
+    <div class="mb-3">
+      <label class="text-muted">Applied On</label>
+      <div>{{ application.applied_on.strftime('%d-%m-%Y %H:%M') }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Status</label>
+      <div>
+        <span class="badge 
+          {% if application.status == 'placed' %}bg-success
+          {% elif application.status == 'shortlisted' %}bg-warning
+          {% elif application.status == 'rejected' or application.status == 'withdrawn' %}bg-danger
+          {% else %}bg-info{% endif %}">
+          {{ application.status | capitalize }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <a href="{{ url_for('student.applications') }}" class="btn btn-secondary">Back</a>
+
+      {% if application.status != 'placed' and application.status != 'rejected' and application.status != 'withdrawn' %}
+        <form method="POST" action="{{ url_for('student.withdraw_application', id=application.id) }}">
+            <button class="btn btn-danger">Withdraw Application</button>
+        </form>
+    {% endif %}
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

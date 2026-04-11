@@ -1,0 +1,144 @@
+{% extends "student/base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4 display-1">Welcome back, {{ student.name }}</h1>
+
+<!-- stat  -->
+<div class="row g-3 mb-4">
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Total Applications</div>
+      <h3>{{ total_applications }}</h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Shortlisted</div>
+      <h3 class="text-primary">{{ shortlisted }}</h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Placed</div>
+      <h3 class="text-success">{{ placed }}</h3>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="stat-card text-center">
+      <div>Rejected</div>
+      <h3 class="text-danger">{{ rejected }}</h3>
+    </div>
+  </div>
+
+</div>
+
+<!-- Graph -->
+<div class="row g-4 mb-4">
+
+  <div class="col-md-6">
+    <div class="custom-card">
+      <div class="card-title">Application Status</div>
+      <canvas id="appChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<!-- Drives -->
+<div class="custom-card mb-4">
+  <div class="card-title">Recommended Drives</div>
+  {% if recommended_drives %}
+  <div class="row">
+    {% for drive in recommended_drives %}
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+
+          <h5>{{ drive.company.name }}</h5>
+
+          <p>
+            <strong>{{ drive.job_title }}</strong><br>
+            <small class="text-muted">Deadline: {{ drive.deadline.strftime('%d-%m-%Y') }}</small>
+          </p>
+
+          <form method="POST" action="{{ url_for('student.apply_drive', id=drive.id) }}">
+            <button class="btn btn-success btn-sm">Apply</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+    {% else %}
+      <p class="text-muted">No recommended drives at the moment.</p>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- applications -->
+<div class="custom-card">
+  <div class="card-title">
+    Top Applications
+  </div>
+
+  {% if top_applications %}
+  <ul class="list-group">
+    {% for app in top_applications %}
+    <li class="list-group-item d-flex justify-content-between">
+
+      <span>
+        <strong>{{ app.drive.company.name }}</strong> — 
+        {{ app.drive.job_title }}
+      </span>
+
+      <span class="badge 
+        {% if app.status == 'placed' %}bg-success
+        {% elif app.status == 'shortlisted' %}bg-info
+        {% elif app.status == 'rejected' %}bg-danger
+        {% elif app.status == 'withdrawn' %}bg-warning
+        {% else %}bg-secondary
+        {% endif %}">
+        {{ app.status | capitalize }}
+      </span>
+
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+    <p class="text-muted">No applications yet</p>
+  {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+new Chart(document.getElementById('appChart'), {
+  type: 'pie',
+  data: {
+    labels: ["Applied", "Shortlisted", "Placed", "Rejected", "Withdrawn"],
+    datasets: [{
+      data: [{{ applied }}, {{ shortlisted }}, {{ placed }}, {{ rejected }}, {{ withdrawn }}],
+      backgroundColor: [
+        "#007bff",  // blue - applied
+        "#ffc107",  // yellow - shortlisted
+        "#28a745",  // green - placed
+        "#dc3545",  // red - rejected
+        "#000000"   // black - withdrawn
+      ]
+    }]
+  }
+});
+
+</script>
+{% endblock %}

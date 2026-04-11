@@ -1,0 +1,69 @@
+{% extends "student/base.html" %}
+
+{% block content %}
+
+<div class="modal-overlay">
+  <div class="modal-card">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div style="margin-bottom: 1rem;">
+          {% for category, message in messages %}
+            <div class="flash-msg flash-{{ category }} alert-dismissible fade show" role="alert">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <h2>Edit Profile</h2>
+
+    <form method="POST" action="{{ url_for('student.edit_profile') }}" enctype="multipart/form-data">
+
+      <div class="mb-3">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ student.name }}" class="custom-input w-100" required>
+      </div>
+
+      <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="email" value="{{ student.email }}" class="custom-input w-100" required>
+      </div>
+
+      <div class="mb-3">
+        <label>Contact Number</label>
+        <input type="text" name="contact_number" value="{{ student.contact_number }}" class="custom-input w-100" required>
+      </div>
+
+      <div class="mb-3">
+        <label>CGPA <small class="text-muted">(0.0 – 10.0)</small></label>
+        <input type="number" name="cgpa" value="{{ student.cgpa }}" step="0.01" min="0" max="10" class="custom-input w-100" required>
+      </div>
+
+      <div class="mb-3">
+        <label>Course</label>
+        <input type="text" name="course" value="{{ student.course or '' }}" class="custom-input w-100">
+      </div>
+
+      <div class="mb-3">
+        <label>Skills</label>
+        <input type="text" name="skills" value="{{ student.skills or '' }}" class="custom-input w-100" placeholder="e.g. Python, SQL, Java">
+      </div>
+
+      <div class="mb-3">
+        <label>Resume <small class="text-muted">(PDF only — leave blank to keep existing)</small></label>
+        <input type="file" name="resume" accept=".pdf" class="form-control">
+        {% if student.resume %}
+          <small class="text-muted">Current: <a href="{{ url_for('static', filename=student.resume[7:]) }}" target="_blank">View</a></small>
+        {% endif %}
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <a href="{{ url_for('student.profile') }}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+{% endblock %}

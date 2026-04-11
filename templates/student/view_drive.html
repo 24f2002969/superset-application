@@ -1,0 +1,65 @@
+{% extends "student/base.html" %}
+
+{% block content %}
+
+<div class="modal-overlay">
+  <div class="modal-card">
+
+    <h2>Drive #{{ drive.id }}</h2>
+
+    <div class="mb-3">
+      <label class="text-muted">Status</label>
+      <div>
+        <span class="badge 
+          {% if drive.status == 'active' %}bg-success
+          {% elif drive.status == 'pending' %}bg-warning text-dark
+          {% elif drive.status == 'rejected' %}bg-danger
+          {% else %}bg-secondary{% endif %}">
+          {{ drive.status | capitalize }}
+        </span>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Company #{{ drive.company.id }}</label>
+      <div>{{ drive.company.name }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Job Title</label>
+      <div>{{ drive.job_title }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Vacancies</label>
+      <div>{{ drive.vacancies }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Description</label>
+      <div>{{ drive.description }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Eligibility</label>
+      <div>{{ drive.eligibility }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Minimum CGPA</label>
+      <div>{{ drive.eligibility_cgpa }}</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="text-muted">Deadline</label>
+      <div class="text-danger fw-bold">{{ drive.deadline.strftime('%d-%m-%Y') }}</div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+      <a href="{{ url_for('student.drives') }}" class="btn btn-secondary">Back</a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "student/base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Applications</h2>
+{% if applications %}
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Company</th>
+        <th>Drive ID</th>
+        <th>Job Title</th>
+        <th>Date Applied</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for app in applications %}
+      <tr>
+        <td>{{ app.id }}</td>
+        <td>{{ app.drive.company.name }}</td>
+        <td>{{ app.drive.id }}</td>
+        <td>{{ app.drive.job_title }}</td>
+        <td>{{ app.applied_on.strftime('%d-%m-%Y') }}</td>
+        <td>
+          <span class="badge 
+            {% if app.status == 'placed' %}bg-success
+            {% elif app.status == 'rejected' %}bg-danger
+            {% elif app.status == 'shortlisted' %}bg-warning
+            {% else %}bg-secondary{% endif %}">
+            {{ app.status | capitalize}}
+          </span>
+        </td>
+        <td>
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="{{ url_for('student.view_application', id=app.id) }}" class="btn btn-success">View</a>
+            {% if app.status != 'placed' and app.status != 'rejected' and app.status != 'withdrawn' %}
+              <form action="{{ url_for('student.withdraw_application', id=app.id) }}" method="POST">
+                <button type="submit" class="btn btn-danger btn-sm">
+                  Withdraw
+                </button>
+              </form>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p class="text-muted">No applications found.</p>
+{% endif %}
+{% endblock %}
