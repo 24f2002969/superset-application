@@ -1,275 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SuperSet - Campus Placement Portal</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PlacementHelper — Campus hiring, minus the chaos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#0b0a10;--bg2:#13111b;--tx:#f3f1ea;--mu:#9b97a8;--ln:rgba(255,255,255,.09);--ac:#c8ff3d;--ac2:#8b7cff;--ink:#0b0a10;--gl:rgba(255,255,255,.04)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f6f4ee;--bg2:#ece9df;--tx:#14121a;--mu:#5f5b6b;--ln:rgba(0,0,0,.1);--ac:#4a35e8;--ac2:#e86a35;--ink:#fff;--gl:rgba(0,0,0,.03)}}
+:root[data-theme="light"]{--bg:#f6f4ee;--bg2:#ece9df;--tx:#14121a;--mu:#5f5b6b;--ln:rgba(0,0,0,.1);--ac:#4a35e8;--ac2:#e86a35;--ink:#fff;--gl:rgba(0,0,0,.03)}
+html{scroll-behavior:smooth;scroll-padding-top:90px;height:auto}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 "Space Grotesk",system-ui,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.w{max-width:1120px;margin:0 auto;padding:0 22px}
+section{padding:96px 0;position:relative}
+h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.03em;line-height:1.05}
+h1{font-size:clamp(2.6rem,7.5vw,5.6rem)}h2{font-size:clamp(2rem,4.8vw,3.4rem)}
+em,.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-.01em}
+.mu{color:var(--mu)}.eyebrow{font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ac);margin-bottom:14px;display:block}
+.rv{opacity:0;transform:translateY(28px);filter:blur(6px);transition:.8s cubic-bezier(.2,.7,.2,1)}.rv.in{opacity:1;transform:none;filter:none}
+/* nav */
+header{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:0;right:0;z-index:50;display:flex;justify-content:center;padding:0 14px}
+nav{display:flex;align-items:center;gap:26px;padding:8px 8px 8px 20px;border-radius:99px;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--ln);max-width:100%}
+.logo{font-weight:700;letter-spacing:-.04em}.logo i{color:var(--ac);font-style:normal}
+.nl{display:flex;gap:22px;font-size:.9rem;color:var(--mu)}.nl a:hover{color:var(--tx)}
+#mb{display:none;background:none;border:0;color:var(--tx);font-size:1.2rem}
+/* buttons */
+.btn{position:relative;display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:99px;font:500 .95rem "Space Grotesk",sans-serif;border:1px solid var(--ln);background:var(--gl);color:var(--tx);cursor:pointer;transition:.25s}
+.btn:hover{transform:translateY(-2px);border-color:var(--mu)}
+.btn.p{background:var(--ac);color:var(--ink);border-color:transparent;font-weight:700;box-shadow:0 0 0 0 var(--ac)}
+.btn.p:hover{box-shadow:0 0 28px -4px var(--ac)}
+.btn.p .ar{transition:.25s}.btn.p:hover .ar{transform:translateX(4px)}
+.star{padding:2px;border-radius:99px;background:conic-gradient(from var(--a,0deg),transparent 0 70%,var(--ac) 85%,transparent);animation:spin 3.5s linear infinite;display:inline-block}
+.star .btn{background:var(--bg);border:0}
+@property --a{syntax:"<angle>";initial-value:0deg;inherits:false}
+@keyframes spin{to{--a:360deg}}
+/* hero */
+.hero{min-height:100svh;display:flex;align-items:center;padding:130px 0 70px;overflow:hidden}
+.aur{position:absolute;inset:0;z-index:0;pointer-events:none}
+.aur b{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:fl 14s ease-in-out infinite alternate}
+.aur b:nth-child(1){width:46vw;height:46vw;background:var(--ac2);left:-10%;top:-20%}
+.aur b:nth-child(2){width:36vw;height:36vw;background:var(--ac);right:-8%;top:10%;opacity:.28;animation-delay:-5s}
+.aur b:nth-child(3){width:30vw;height:30vw;background:#ff6a88;left:35%;bottom:-25%;opacity:.25;animation-delay:-9s}
+@keyframes fl{to{transform:translate(8vw,6vh) scale(1.2)}}
+.dots{position:absolute;inset:0;background-image:radial-gradient(var(--ln) 1px,transparent 1px);background-size:26px 26px;-webkit-mask-image:radial-gradient(circle 260px at var(--mx,50%) var(--my,40%),#000,transparent);mask-image:radial-gradient(circle 260px at var(--mx,50%) var(--my,40%),#000,transparent);filter:brightness(3)}
+.hero .w{position:relative;z-index:1}
+.chip{display:inline-flex;gap:10px;align-items:center;padding:6px 14px;border:1px solid var(--ln);border-radius:99px;font-size:.82rem;background:var(--gl);margin-bottom:26px}
+.shine{background:linear-gradient(110deg,var(--mu) 35%,var(--tx) 50%,var(--mu) 65%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 3s linear infinite}
+@keyframes sh{from{background-position:120% 0}to{background-position:-120% 0}}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ac);box-shadow:0 0 10px var(--ac)}
+.hero h1 .wd{display:inline-block;opacity:0;transform:translateY(40px);filter:blur(8px);animation:up .9s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes up{to{opacity:1;transform:none;filter:none}}
+.rot{display:inline-block;position:relative;color:var(--ac);min-width:3ch;transition:.4s}
+.hero p{max-width:540px;font-size:1.1rem;margin:26px 0 32px}
+.cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+/* marquee */
+.mq{overflow:hidden;border-block:1px solid var(--ln);padding:22px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.tr{display:flex;gap:56px;width:max-content;animation:mq 28s linear infinite}.mq:hover .tr{animation-play-state:paused}
+.tr span{font-size:1.4rem;font-weight:700;letter-spacing:-.03em;color:var(--mu);white-space:nowrap}
+.rev .tr{animation-direction:reverse;animation-duration:40s}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--ln)}
+.stats div{padding:44px 20px;border-right:1px solid var(--ln)}.stats div:last-child{border:0}
+.stats b{display:block;font-size:clamp(2.2rem,5vw,3.6rem);font-weight:500;letter-spacing:-.04em}
+.stats span{color:var(--mu);font-size:.9rem}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:48px}
+.sp{position:relative;overflow:hidden;border:1px solid var(--ln);border-radius:22px;padding:28px;background:var(--bg2);isolation:isolate}
+.sp::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:.4s;background:radial-gradient(420px circle at var(--x,50%) var(--y,50%),color-mix(in srgb,var(--ac) 18%,transparent),transparent 60%)}
+.sp:hover::before{opacity:1}
+.sp::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:radial-gradient(240px circle at var(--x,50%) var(--y,50%),var(--ac),transparent 70%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.4s}
+.sp:hover::after{opacity:.9}
+.sp h3{font-size:1.35rem;margin:14px 0 8px}.sp p{margin:0;color:var(--mu);font-size:.95rem}
+.s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}
+.ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--gl);border:1px solid var(--ln);font-size:1.2rem}
+.ico svg{width:20px;height:20px;fill:none;stroke:var(--ac);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bars{display:flex;align-items:flex-end;gap:6px;height:90px;margin-top:20px}
+.bars i{flex:1;background:linear-gradient(var(--ac),transparent);border-radius:6px 6px 0 0;opacity:.8;transition:.6s;height:var(--h)}
+.pl{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.pl span{padding:5px 12px;border:1px solid var(--ln);border-radius:99px;font-size:.8rem;color:var(--mu)}
+/* steps */
+.steps{position:relative;margin-top:50px;padding-left:36px}
+.steps::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;width:2px;background:var(--ln)}
+.steps .fill{position:absolute;left:11px;top:6px;width:2px;background:var(--ac);height:0;box-shadow:0 0 12px var(--ac)}
+.st{position:relative;padding:0 0 46px;opacity:.35;transition:.5s}.st.on{opacity:1}
+.st::before{content:attr(data-n);position:absolute;left:-36px;top:0;width:24px;height:24px;border-radius:50%;background:var(--bg);border:1px solid var(--ln);display:grid;place-items:center;font-size:.72rem}
+.st.on::before{background:var(--ac);color:var(--ink);border-color:var(--ac)}
+.st h3{font-size:1.6rem}.st p{margin:6px 0 0;color:var(--mu);max-width:520px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:start}
+/* tabs */
+.tabs{display:inline-flex;padding:5px;border:1px solid var(--ln);border-radius:99px;background:var(--gl);margin:30px 0 24px;position:relative}
+.tabs button{position:relative;z-index:1;background:none;border:0;color:var(--mu);padding:9px 22px;border-radius:99px;font:500 .92rem "Space Grotesk",sans-serif;cursor:pointer;transition:.3s}
+.tabs button.on{color:var(--ink)}
+.pill{position:absolute;z-index:0;top:5px;bottom:5px;border-radius:99px;background:var(--ac);transition:.35s cubic-bezier(.3,.8,.3,1)}
+.pn{display:none;grid-template-columns:1fr 1fr;gap:14px}.pn.on{display:grid;animation:up .5s forwards}
+.pn .sp{padding:22px}
+.pn li{list-style:none;padding:8px 0 8px 22px;position:relative;border-bottom:1px dashed var(--ln);color:var(--mu)}
+.pn li::before{content:"↗";position:absolute;left:0;color:var(--ac)}
+.pn ul{margin:0;padding:0}
+/* pricing */
+.sw{display:inline-flex;align-items:center;gap:12px;color:var(--mu);font-size:.9rem;margin:24px 0 0}
+.tg{width:52px;height:28px;border-radius:99px;background:var(--gl);border:1px solid var(--ln);position:relative;cursor:pointer;padding:0}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--ac);transition:.3s}
+.tg.on::after{transform:translateX(24px)}
+.pr{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
+.pc{position:relative;border:1px solid var(--ln);border-radius:22px;padding:30px;background:var(--bg2)}
+.pc.f{border-color:transparent;background:linear-gradient(var(--bg2),var(--bg2)) padding-box,conic-gradient(from var(--a),transparent 0 60%,var(--ac) 80%,var(--ac2),transparent) border-box;border:1.5px solid transparent;animation:spin 5s linear infinite}
+.pc .amt{font-size:2.8rem;letter-spacing:-.04em;margin:14px 0 4px}.pc .amt small{font-size:.9rem;color:var(--mu)}
+.pc ul{padding:0;margin:20px 0 26px;list-style:none}.pc li{padding:6px 0;color:var(--mu);font-size:.93rem}.pc li::before{content:"✓ ";color:var(--ac)}
+.pc .btn{width:100%;justify-content:center}
+.badge{position:absolute;top:-12px;right:22px;background:var(--ac);color:var(--ink);font-size:.72rem;font-weight:700;padding:3px 12px;border-radius:99px}
+/* testimonials */
+.tc{width:340px;white-space:normal;flex:none}.tc p{margin:0 0 18px;font-size:1.02rem;color:var(--tx)}
+.tc small{color:var(--mu)}
+.tm{overflow:hidden;margin-top:44px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.tm .tr{gap:14px;animation-duration:55s}
+/* faq */
+details{border-bottom:1px solid var(--ln);padding:20px 0}
+summary{cursor:pointer;font-size:1.2rem;display:flex;justify-content:space-between;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--ac);font-size:1.5rem;line-height:1;transition:.3s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--mu);margin:12px 0 0;max-width:620px}
+/* form */
+form{display:grid;gap:16px}
+.fl{position:relative}
+.fl input,.fl select,.fl textarea{width:100%;background:var(--gl);border:1px solid var(--ln);border-radius:14px;padding:22px 16px 8px;color:var(--tx);font:inherit;outline:0;transition:.25s}
+.fl select{padding:16px}
+.fl input:focus,.fl textarea:focus,.fl select:focus{border-color:var(--ac);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 15%,transparent)}
+.fl label{position:absolute;left:16px;top:15px;color:var(--mu);font-size:.95rem;pointer-events:none;transition:.2s}
+.fl input:focus+label,.fl input:not(:placeholder-shown)+label,.fl textarea:focus+label,.fl textarea:not(:placeholder-shown)+label{top:6px;font-size:.7rem;color:var(--ac)}
+/* big cta + footer */
+.big{border:1px solid var(--ln);border-radius:32px;padding:80px 24px;text-align:center;background:var(--bg2);position:relative;overflow:hidden}
+.big::before{content:"";position:absolute;width:60%;height:200px;left:20%;top:-100px;background:var(--ac);filter:blur(110px);opacity:.3}
+footer{padding:60px 0 0;border-top:1px solid var(--ln);overflow:hidden}
+.fg{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:30px}
+footer h4{margin:0 0 12px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mu);font-weight:500}
+footer a{display:block;margin-bottom:8px;font-size:.95rem}footer a:hover{color:var(--ac)}
+.wm{font-size:clamp(3rem,15vw,12rem);font-weight:700;letter-spacing:-.07em;line-height:.8;margin:50px 0 -.12em;background:linear-gradient(var(--tx),transparent 85%);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.18;white-space:nowrap}
+.cp{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:22px 0;color:var(--mu);font-size:.85rem;border-top:1px solid var(--ln)}
+@media(max-width:860px){
+.nl{display:none;position:absolute;top:58px;left:14px;right:14px;flex-direction:column;background:var(--bg2);border:1px solid var(--ln);border-radius:20px;padding:18px}.nl.o{display:flex}
+#mb{display:block}nav{gap:14px}
+.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(2){border-right:0}.stats div{border-bottom:1px solid var(--ln)}
+.bento,.pr,.two,.fg,.pn{grid-template-columns:1fr}.s2,.s3,.s4{grid-column:auto}section{padding:70px 0}.tc{width:280px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv,.hero h1 .wd{opacity:1;transform:none;filter:none}}
+</style>
 </head>
 <body>
+<header><nav>
+<a href="#top" class="logo">placement<i>/</i>helper</a>
+<div class="nl" id="nl"><a href="#features">Features</a><a href="#how">How it works</a><a href="#who">Solutions</a><a href="#pricing">Pilot</a><a href="#faq">FAQ</a></div>
+<a href="#contact" class="btn p" style="padding:8px 18px">Join pilot <span class="ar">→</span></a>
+<button id="mb" aria-label="Menu">☰</button>
+</nav></header>
 
-  {% for i in range(12) %}
-    <div class="bubble"></div>
-  {% endfor %}
+<main id="top">
+<section class="hero"><div class="aur"><b></b><b></b><b></b></div><div class="dots" id="dots"></div>
+<div class="w">
 
-    <!-- Grid Line Overlay -->
-  <div class="home-grid" aria-hidden="true"></div>
+<h1><span class="wd">The</span> <span class="wd" style="animation-delay:.08s">bridge</span> <span class="wd" style="animation-delay:.16s">between</span><br><span class="rot wd serif" id="rot" style="animation-delay:.3s">colleges</span> <span class="wd" style="animation-delay:.4s">&amp;</span> <em class="wd" style="animation-delay:.5s">recruiters.</em></h1>
+<p class="mu">We're building one place to run an entire campus drive: registrations, eligibility, tests, interviews and offers. No more spreadsheets and late-night WhatsApp groups.</p>
+<div class="cta"><span class="star"><a href="#contact" class="btn">Join the pilot →</a></span><a href="#how" class="btn">See how it works</a></div>
+</div></section>
 
-  <!--  Navbar  -->
-  <nav class="home-nav">
-    <div class="nav-brand">Super<span>Set</span></div>
-    <div class="nav-actions">
-      <a href="{{ url_for('auth.login') }}" class="btn-slate">Login</a>
-      <a href="{{ url_for('auth.register_student') }}" class="btn-zenvia">Register</a>
-    </div>
-  </nav>
+<div class="mq"><div class="tr" id="m1"></div></div>
 
-  <!--  Hero  -->
-  <section class="hero-section">
-    <div class="hero-inner">
+<div class="w"><div class="stats">
+<div><b>Sheets</b><span>Eligibility lists kept by hand</span></div>
+<div><b>Chats</b><span>Updates lost in group chats</span></div>
+<div><b>Forms</b><span>Registrations on scattered forms</span></div>
+<div><b>Calls</b><span>Scheduling over endless calls</span></div></div></div>
 
-      <div class="hero-badge">
-        <span class="badge-dot"></span>
-        IIT Madras · Modern Application Development - 1
-      </div>
+<section id="features"><div class="w">
+<span class="eyebrow rv">What we're building</span><h2 class="rv">Everything a drive needs,<br><em>nothing it doesn't.</em></h2>
+<div class="bento">
+<div class="sp s4 rv"><div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15v3M12 9v9M17 5v13"/></svg></div><h3>Live drive dashboard</h3><p>See every company, round and student status in real time. Export reports for your placement cell and management.</p>
+<div class="bars" id="bars"></div><p class="mu" style="font-size:.75rem;margin:10px 0 0">Illustrative preview</p></div>
+<div class="sp s2 rv"><div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></div><h3>Smart eligibility</h3><p>CGPA, branch, backlogs, batch — shortlisted automatically.</p></div>
+<div class="sp s2 rv"><div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div><h3>Clash-free scheduler</h3><p>Tests, GDs and interviews planned across rooms and panels.</p></div>
+<div class="sp s2 rv"><div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></div><h3>Instant alerts</h3><p>Email, SMS and in-app pings for every deadline.</p></div>
+<div class="sp s2 rv"><div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div><h3>Resume builder</h3><p>One clean, recruiter-ready format for every student.</p></div>
+<div class="sp s3 rv"><div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></div><h3>Online assessments</h3><p>Aptitude and coding rounds with automatic scoring.</p>
+<div class="pl"><span>Aptitude</span><span>Coding</span><span>Auto-scoring</span></div></div>
+<div class="sp s3 rv"><div class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></div><h3>Built to connect</h3><p>Spreadsheet import first, with more integrations on the roadmap.</p>
+<div class="pl"><span>Sheets</span><span>Meet</span><span>Zoom</span><span>ERP (planned)</span></div></div>
+</div></div></section>
 
-      <h1 class="hero-title">
-        Campus Placements,<br>
-        <span class="hero-accent">Reimagined.</span>
-      </h1>
+<section id="how" style="background:var(--bg2)"><div class="w two">
+<div style="position:sticky;top:110px"><span class="eyebrow rv">How it works</span><h2 class="rv">From invite to <em>offer letter</em> in four moves.</h2>
+<p class="mu rv" style="margin-top:18px;max-width:380px">We're shaping each step together with our early partner colleges.</p></div>
+<div class="steps" id="steps"><div class="fill" id="fill"></div>
+<div class="st" data-n="1"><h3>Onboard</h3><p>Set up college profile, branches, batches and eligibility criteria.</p></div>
+<div class="st" data-n="2"><h3>Invite</h3><p>Verified companies post roles, packages and selection rounds.</p></div>
+<div class="st" data-n="3"><h3>Match &amp; apply</h3><p>Eligible students are auto-shortlisted and apply in one tap.</p></div>
+<div class="st" data-n="4"><h3>Hire</h3><p>Tests, interviews and offers — scheduled and tracked end to end.</p></div>
+</div></div></section>
 
-      <p class="hero-desc">
-        SuperSet is your end-to-end placement platform — from drive discovery
-        to offer letters, all in one unified system built for students, companies
-        and placement cells.
-      </p>
+<section id="who"><div class="w">
+<span class="eyebrow rv">Solutions</span><h2 class="rv">One platform. <em>Three sides</em> of the table.</h2>
+<div class="tabs rv" id="tabs"><span class="pill" id="pill"></span><button class="on">Colleges</button><button>Companies</button><button>Students</button></div>
+<div class="pn on"><div class="sp"><h3>Run it like a pro</h3><ul><li>Centralised drive calendar</li><li>Rule-based shortlisting</li><li>Accreditation-ready reports</li></ul></div><div class="sp"><h3>Save the hours</h3><p>Less back-and-forth for placement officers: fewer calls, fewer clashes, fewer lost sheets.</p></div></div>
+<div class="pn"><div class="sp"><h3>Hire without logistics</h3><ul><li>Verified, filterable talent pools</li><li>Hassle-free campus scheduling</li><li>Shared candidate scorecards</li></ul></div><div class="sp"><h3>No cost to post roles</h3><p>Our plan is for recruiters to post roles for free. Details are being finalised with pilot partners.</p></div></div>
+<div class="pn"><div class="sp"><h3>Never miss a drive</h3><ul><li>One profile, many opportunities</li><li>Live application status</li><li>Mock tests &amp; interview prep</li></ul></div><div class="sp"><h3>Built for students first</h3><p>Our goal is to keep it free for students. Build your profile once and apply wherever your college is hiring.</p></div></div>
+</div></section>
 
-      <div class="hero-cta">
-        <a href="{{ url_for('auth.register_student') }}" class="btn-cta-primary">
-          Get Started as Student
-          <span class="btn-arrow">→</span>
-        </a>
-        <a href="{{ url_for('auth.register_company') }}" class="btn-cta-secondary">
-          Register Company
-        </a>
-      </div>
+<section id="pricing" style="background:var(--bg2)"><div class="w" style="text-align:center">
+<span class="eyebrow rv">Pilot program</span><h2 class="rv">Become a founding <em>partner.</em></h2>
+<p class="mu rv" style="max-width:560px;margin:18px auto 0">We're pre-launch and working with a small group of colleges. Pilot partners get free access and a direct say in what we build.</p>
+<div class="pr" style="text-align:left">
+<div class="pc f rv"><span class="badge">Open now</span><h3>Colleges</h3><p class="mu">Placement cells &amp; TPOs</p><div class="amt">Free pilot</div><ul><li>Hands-on onboarding</li><li>Direct line to the founders</li><li>Shape the roadmap</li></ul><a href="#contact" class="btn p">Join the pilot</a></div>
+<div class="pc rv"><h3>Recruiters</h3><p class="mu">Companies hiring on campus</p><div class="amt">Early access</div><ul><li>Post roles to pilot colleges</li><li>Give feedback on the workflow</li></ul><a href="#contact" class="btn">Get in touch</a></div>
+<div class="pc rv"><h3>Students</h3><p class="mu">Final-year &amp; pre-final</p><div class="amt">Waitlist</div><ul><li>Hear when your college joins</li><li>Be first to try it</li></ul><a href="#contact" class="btn">Join waitlist</a></div>
+</div></div></section>
 
-      <!-- Stat pills -->
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <span class="hero-stat-num">3</span>
-          <span class="hero-stat-label">Roles Supported</span>
-        </div>
-        <div class="hero-stat-divider"></div>
-        <div class="hero-stat">
-          <span class="hero-stat-num">100%</span>
-          <span class="hero-stat-label">Open Source</span>
-        </div>
-        <div class="hero-stat-divider"></div>
-        <div class="hero-stat">
-          <span class="hero-stat-num">MAD-1</span>
-          <span class="hero-stat-label">IIT Madras Project</span>
-        </div>
-      </div>
+<section><div class="w"><span class="eyebrow rv">Roadmap</span><h2 class="rv">Where we are, <em>and where we're headed.</em></h2>
+<div class="pr">
+<div class="sp rv"><span class="eyebrow">Now</span><h3>Learn &amp; build</h3><p>Talking to placement cells, validating the workflow and building the first version.</p></div>
+<div class="sp rv"><span class="eyebrow">Next</span><h3>Pilot</h3><p>Run real drives with a small group of partner colleges and recruiters.</p></div>
+<div class="sp rv"><span class="eyebrow">Later</span><h3>Grow</h3><p>Assessments, analytics and integrations, guided by pilot feedback.</p></div>
+</div></div></section>
 
-    </div>
+<section id="faq" style="padding-top:20px"><div class="w two">
+<div><span class="eyebrow rv">FAQ</span><h2 class="rv">Questions, <em>answered.</em></h2></div>
+<div>
+<details><summary>How long does onboarding take?</summary><p>We set up pilot colleges personally. Timelines depend on your data and drive calendar, and we'll agree them with you.</p></details>
+<details><summary>Is student data secure?</summary><p>Student privacy is a core design goal: role-based access and consent-first sharing. We'll walk pilot partners through the details.</p></details>
+<details><summary>What will it cost?</summary><p>Pricing isn't final yet. Pilot colleges use it free, and we plan to keep it free for recruiters and students.</p></details>
+<details><summary>Can we run virtual or hybrid drives?</summary><p>That's the goal: online tests, video interviews and in-person rounds in one schedule.</p></details>
+<details><summary>Does it integrate with our ERP?</summary><p>Spreadsheet import/export comes first. ERP and SSO are on the roadmap, shaped by what pilot colleges need.</p></details>
+</div></div></section>
 
-    <!-- Mock FLoating Card  -->
-    <div class="hero-visual" aria-hidden="true">
-      <div class="mock-card">
-        <div class="mock-card-header">
-          <div class="mock-dot red"></div>
-          <div class="mock-dot yellow"></div>
-          <div class="mock-dot green"></div>
-          <span class="mock-card-title">Drive #42 — Software Engineer</span>
-        </div>
-        <div class="mock-row">
-          <span class="mock-label">Company</span>
-          <span class="mock-value">JP Morgan Chase</span>
-        </div>
-        <div class="mock-row">
-          <span class="mock-label">Vacancies</span>
-          <span class="mock-value">12</span>
-        </div>
-        <div class="mock-row">
-          <span class="mock-label">Min CGPA</span>
-          <span class="mock-value">8.5</span>
-        </div>
-        <div class="mock-row">
-          <span class="mock-label">Deadline</span>
-          <span class="mock-value mock-red">30 Apr 2025</span>
-        </div>
-        <div class="mock-row">
-          <span class="mock-label">Status</span>
-          <span class="pill pill-active">Active</span>
-        </div>
-        <div class="mock-apply-btn">Apply Now →</div>
-      </div>
+<section id="contact" style="background:var(--bg2)"><div class="w two">
+<div><span class="eyebrow rv">Contact</span><h2 class="rv">Plan your next <em>season</em> with us.</h2>
+<p class="mu rv" style="margin:18px 0">Tell us how your placement process works today. We'll get back to you about the pilot.</p>
+<p class="rv">hello@placementhelper.example</p></div>
+<form id="cf" class="rv">
+<div class="fl"><input id="a" placeholder=" " required><label for="a">Your name</label></div>
+<div class="fl"><input id="b" type="email" placeholder=" " required><label for="b">Work email</label></div>
+<div class="fl"><input id="c" placeholder=" "><label for="c">College / Company</label></div>
+<div class="fl"><select><option>I'm a College</option><option>I'm a Company</option><option>I'm a Student</option></select></div>
+<div class="fl"><textarea id="d" rows="3" placeholder=" "></textarea><label for="d">How can we help?</label></div>
+<button class="btn p" style="justify-content:center">Request early access <span class="ar">→</span></button>
+<p id="ok" class="mu" hidden>✓ Thanks — we'll reply within 24 hours.</p></form></div></section>
 
-      <div class="mock-card mock-card-behind">
-        <div class="mock-card-header">
-          <div class="mock-dot red"></div>
-          <div class="mock-dot yellow"></div>
-          <div class="mock-dot green"></div>
-          <span class="mock-card-title">Application #101</span>
-        </div>
-        <div class="mock-row">
-          <span class="mock-label">Student</span>
-          <span class="mock-value">Aman Gupta</span>
-        </div>
-        <div class="mock-row">
-          <span class="mock-label">Status</span>
-          <span class="pill pill-shortlisted">Shortlisted</span>
-        </div>
-      </div>
-    </div>
+<section><div class="w"><div class="big rv"><h2>Ready to simplify <em>placements?</em></h2><p class="mu" style="margin:16px 0 28px">Help us build it. Join the pilot.</p><span class="star"><a href="#contact" class="btn">Join the pilot →</a></span></div></div></section>
+</main>
 
-  </section>
+<footer><div class="w"><div class="fg">
+<div><div class="logo" style="font-size:1.2rem">placement<i>/</i>helper</div><p class="mu" style="max-width:260px">The bridge between colleges, companies and students.</p></div>
+<div><h4>Product</h4><a href="#features">Features</a><a href="#pricing">Pilot</a><a href="#how">How it works</a></div>
+<div><h4>Company</h4><a href="#who">Solutions</a><a href="#faq">FAQ</a><a href="#contact">Contact</a></div>
+<div><h4>Legal</h4><a href="#top">Privacy</a><a href="#top">Terms</a></div></div>
+<div class="wm">PlacementHelper</div>
+<div class="cp"><span>© 2026 PlacementHelper</span><span>LinkedIn · X · Instagram · YouTube</span></div></div></footer>
 
-
-  <section class="home-section">
-    <div class="home-section-inner">
-      <p class="section-eyebrow">How it works</p>
-      <h2 class="section-title">Three roles. One platform.</h2>
-
-      <div class="roles-grid">
-
-        <div class="role-card">
-          <h3>Student</h3>
-          <ul class="role-list">
-            <li>Register & build your profile</li>
-            <li>Browse approved placement drives</li>
-            <li>Apply in one click</li>
-            <li>Track application status live</li>
-            <li>View your placement history</li>
-          </ul>
-          <a href="{{ url_for('auth.register_student') }}" class="role-cta">Join as Student →</a>
-        </div>
-
-        <div class="role-card role-card-featured">
-          <h3>Company</h3>
-          <ul class="role-list">
-            <li>Register & await admin approval</li>
-            <li>Post placement drives</li>
-            <li>Review student applications</li>
-            <li>Shortlist & place candidates</li>
-            <li>Manage all drives from dashboard</li>
-          </ul>
-          <a href="{{ url_for('auth.register_company') }}" class="role-cta">Register Company →</a>
-        </div>
-
-        <div class="role-card">
-          <h3>Admin</h3>
-          <ul class="role-list">
-            <li>Approve company registrations</li>
-            <li>Approve & manage drives</li>
-            <li>View all students & companies</li>
-            <li>Blacklist / deactivate accounts</li>
-            <li>Full audit log of all actions</li>
-          </ul>
-          <a href="{{ url_for('auth.login') }}" class="role-cta">Admin Login →</a>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!--  Features  -->
-  <section class="home-section home-section-alt">
-    <div class="home-section-inner">
-      <p class="section-eyebrow">Features</p>
-      <h2 class="section-title">Everything you need, nothing you don't.</h2>
-
-      <div class="features-grid">
-        <div class="feature-item">
-          <div class="card">
-            <div class="card-body d-flex flex-column">
-          <div>
-            <h4>Live Statistics</h4>
-            <p>Real-time placement data, application pipelines, and drive analytics across all dashboards.</p>
-          </div>
-          </div>
-          </div>
-        </div>
-        <div class="feature-item">
-          <div class="card">
-            <div class="card-body d-flex flex-column">
-          <div>
-            <h4>Role-based Access</h4>
-            <p>Students, companies, and admins each get purpose-built views with strict access control.</p>
-          </div>
-          </div>
-          </div>
-        </div>
-        <div class="feature-item">
-          <div class="card">
-            <div class="card-body d-flex flex-column">
-          <div>
-            <h4>Audit Logs</h4>
-            <p>Every action is logged — approvals, rejections, applications — for full transparency.</p>
-          </div>
-          </div>
-          </div>
-        </div>
-        <div class="feature-item">
-          <div class="card">
-            <div class="card-body d-flex flex-column">
-          <div>
-            <h4>Resume Management</h4>
-            <p>Students upload PDF resumes; companies can view them directly from application cards.</p>
-          </div>
-          </div>
-          </div>
-        </div>
-        <div class="feature-item">
-          <div class="card">
-            <div class="card-body d-flex flex-column">
-          <div>
-            <h4>CGPA Filtering</h4>
-            <p>Drives are filtered by eligibility CGPA so students only see drives they qualify for.</p>
-          </div>
-          </div>
-          </div>
-        </div>
-        <div class="feature-item">
-          <div class="card">
-            <div class="card-body d-flex flex-column">
-          <div>
-            <h4>Instant Notifications</h4>
-            <p>Status updates on shortlisting, placement, and withdrawals appear in the notification log.</p>
-          </div>
-          </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Credit  -->
-  <section class="credit-section">
-    <div class="credit-inner">
-      <div class="credit-tag">Built by</div>
-      <h2 class="credit-name">Aman Gupta</h2>
-      <p class="credit-detail">
-        <a href="mailto:24f2002969@ds.study.iitm.ac.in">24f2002969@ds.study.iitm.ac.in</a>
-      </p>
-      <p class="credit-course">Modern Application Development - 1 &nbsp;·&nbsp; IIT Madras Online Degree</p>
-      <div class="credit-divider"></div>
-      <a href="{{ url_for('auth.register_student') }}" class="btn-cta-primary" style="margin-top:1.5rem;display:inline-flex;">
-        Get Started →
-      </a>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="home-footer">
-    <p>© 2025 SuperSet &nbsp;·&nbsp; MAD-1 Project &nbsp;·&nbsp; IIT Madras</p>
-    <p>Flask · SQLite · Bootstrap</p>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+var $=function(s){return document.querySelector(s)},$$=function(s){return document.querySelectorAll(s)};
+$('#mb').onclick=function(){$('#nl').classList.toggle('o')};$$('#nl a').forEach(function(a){a.onclick=function(){$('#nl').classList.remove('o')}});
+/* marquees */
+var co=['Registrations','Eligibility','Scheduling','Online tests','Interviews','Offers','Reports','Alerts'];
+$('#m1').innerHTML=co.concat(co).map(function(c){return'<span>'+c+'</span>'}).join('');
+/* spotlight */
+document.addEventListener('pointermove',function(e){var d=$('#dots');d.style.setProperty('--mx',e.clientX+'px');d.style.setProperty('--my',e.clientY+'px');
+var s=e.target.closest&&e.target.closest('.sp');if(s){var r=s.getBoundingClientRect();s.style.setProperty('--x',e.clientX-r.left+'px');s.style.setProperty('--y',e.clientY-r.top+'px')}});
+/* rotating text */
+var w=['colleges','students','companies','placement cells'],i=0,r=$('#rot');
+setInterval(function(){r.style.opacity=0;r.style.transform='translateY(-10px)';setTimeout(function(){i=(i+1)%w.length;r.textContent=w[i];r.style.transform='translateY(10px)';requestAnimationFrame(function(){r.style.opacity=1;r.style.transform='none'})},350)},2600);
+/* reveal + count-up */
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+$$('.rv').forEach(function(x){io.observe(x)});
+var co2=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;var el=e.target,n=+el.dataset.c,t=0;co2.unobserve(el);
+var f=function(){t+=.03;var p=1-Math.pow(1-Math.min(t,1),3);el.textContent=Math.round(n*p)+el.dataset.s;if(t<1)requestAnimationFrame(f)};f()})},{threshold:.6});
+$$('[data-c]').forEach(function(x){co2.observe(x)});
+/* bars */
+var b=$('#bars');[40,65,50,80,60,95,75,100].forEach(function(h){var x=document.createElement('i');x.style.setProperty('--h',h+'%');b.appendChild(x)});
+/* steps scroll */
+function stp(){var s=$('#steps'),r=s.getBoundingClientRect(),vh=innerHeight,p=Math.max(0,Math.min(1,(vh*.6-r.top)/r.height));$('#fill').style.height=(p*(r.height-12))+'px';
+$$('.st').forEach(function(x,k){x.classList.toggle('on',p>=k/4-.02)})}
+addEventListener('scroll',stp,{passive:true});stp();
+/* tabs */
+var tb=$$('#tabs button'),pn=$$('.pn');
+function pos(b){var p=$('#pill');p.style.left=b.offsetLeft+'px';p.style.width=b.offsetWidth+'px'}
+tb.forEach(function(x,k){x.onclick=function(){tb.forEach(function(y){y.classList.remove('on')});x.classList.add('on');pn.forEach(function(p,j){p.classList.toggle('on',j==k)});pos(x)}});
+addEventListener('load',function(){pos(tb[0])});setTimeout(function(){pos(tb[0])},400);
+$('#cf').onsubmit=function(e){e.preventDefault();$('#ok').hidden=false;this.reset()};
+</script>
 </body>
 </html>

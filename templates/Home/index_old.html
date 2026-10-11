@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SuperSet - Campus Placement Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+
+</head>
+<body>
+
+  {% for i in range(12) %}
+    <div class="bubble"></div>
+  {% endfor %}
+
+    <!-- Grid Line Overlay -->
+  <div class="home-grid" aria-hidden="true"></div>
+
+  <!--  Navbar  -->
+  <nav class="home-nav">
+    <div class="nav-brand">Super<span>Set</span></div>
+    <div class="nav-actions">
+      <a href="{{ url_for('auth.login') }}" class="btn-slate">Login</a>
+      <a href="{{ url_for('auth.register_student') }}" class="btn-zenvia">Register</a>
+    </div>
+  </nav>
+
+  <!--  Hero  -->
+  <section class="hero-section">
+    <div class="hero-inner">
+
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        IIT Madras · Modern Application Development - 1
+      </div>
+
+      <h1 class="hero-title">
+        Campus Placements,<br>
+        <span class="hero-accent">Reimagined.</span>
+      </h1>
+
+      <p class="hero-desc">
+        SuperSet is your end-to-end placement platform — from drive discovery
+        to offer letters, all in one unified system built for students, companies
+        and placement cells.
+      </p>
+
+      <div class="hero-cta">
+        <a href="{{ url_for('auth.register_student') }}" class="btn-cta-primary">
+          Get Started as Student
+          <span class="btn-arrow">→</span>
+        </a>
+        <a href="{{ url_for('auth.register_company') }}" class="btn-cta-secondary">
+          Register Company
+        </a>
+      </div>
+
+      <!-- Stat pills -->
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num">3</span>
+          <span class="hero-stat-label">Roles Supported</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">100%</span>
+          <span class="hero-stat-label">Open Source</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num">MAD-1</span>
+          <span class="hero-stat-label">IIT Madras Project</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Mock FLoating Card  -->
+    <div class="hero-visual" aria-hidden="true">
+      <div class="mock-card">
+        <div class="mock-card-header">
+          <div class="mock-dot red"></div>
+          <div class="mock-dot yellow"></div>
+          <div class="mock-dot green"></div>
+          <span class="mock-card-title">Drive #42 — Software Engineer</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Company</span>
+          <span class="mock-value">JP Morgan Chase</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Vacancies</span>
+          <span class="mock-value">12</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Min CGPA</span>
+          <span class="mock-value">8.5</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Deadline</span>
+          <span class="mock-value mock-red">30 Apr 2025</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Status</span>
+          <span class="pill pill-active">Active</span>
+        </div>
+        <div class="mock-apply-btn">Apply Now →</div>
+      </div>
+
+      <div class="mock-card mock-card-behind">
+        <div class="mock-card-header">
+          <div class="mock-dot red"></div>
+          <div class="mock-dot yellow"></div>
+          <div class="mock-dot green"></div>
+          <span class="mock-card-title">Application #101</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Student</span>
+          <span class="mock-value">Aman Gupta</span>
+        </div>
+        <div class="mock-row">
+          <span class="mock-label">Status</span>
+          <span class="pill pill-shortlisted">Shortlisted</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <section class="home-section">
+    <div class="home-section-inner">
+      <p class="section-eyebrow">How it works</p>
+      <h2 class="section-title">Three roles. One platform.</h2>
+
+      <div class="roles-grid">
+
+        <div class="role-card">
+          <h3>Student</h3>
+          <ul class="role-list">
+            <li>Register & build your profile</li>
+            <li>Browse approved placement drives</li>
+            <li>Apply in one click</li>
+            <li>Track application status live</li>
+            <li>View your placement history</li>
+          </ul>
+          <a href="{{ url_for('auth.register_student') }}" class="role-cta">Join as Student →</a>
+        </div>
+
+        <div class="role-card role-card-featured">
+          <h3>Company</h3>
+          <ul class="role-list">
+            <li>Register & await admin approval</li>
+            <li>Post placement drives</li>
+            <li>Review student applications</li>
+            <li>Shortlist & place candidates</li>
+            <li>Manage all drives from dashboard</li>
+          </ul>
+          <a href="{{ url_for('auth.register_company') }}" class="role-cta">Register Company →</a>
+        </div>
+
+        <div class="role-card">
+          <h3>Admin</h3>
+          <ul class="role-list">
+            <li>Approve company registrations</li>
+            <li>Approve & manage drives</li>
+            <li>View all students & companies</li>
+            <li>Blacklist / deactivate accounts</li>
+            <li>Full audit log of all actions</li>
+          </ul>
+          <a href="{{ url_for('auth.login') }}" class="role-cta">Admin Login →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!--  Features  -->
+  <section class="home-section home-section-alt">
+    <div class="home-section-inner">
+      <p class="section-eyebrow">Features</p>
+      <h2 class="section-title">Everything you need, nothing you don't.</h2>
+
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="card">
+            <div class="card-body d-flex flex-column">
+          <div>
+            <h4>Live Statistics</h4>
+            <p>Real-time placement data, application pipelines, and drive analytics across all dashboards.</p>
+          </div>
+          </div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="card">
+            <div class="card-body d-flex flex-column">
+          <div>
+            <h4>Role-based Access</h4>
+            <p>Students, companies, and admins each get purpose-built views with strict access control.</p>
+          </div>
+          </div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="card">
+            <div class="card-body d-flex flex-column">
+          <div>
+            <h4>Audit Logs</h4>
+            <p>Every action is logged — approvals, rejections, applications — for full transparency.</p>
+          </div>
+          </div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="card">
+            <div class="card-body d-flex flex-column">
+          <div>
+            <h4>Resume Management</h4>
+            <p>Students upload PDF resumes; companies can view them directly from application cards.</p>
+          </div>
+          </div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="card">
+            <div class="card-body d-flex flex-column">
+          <div>
+            <h4>CGPA Filtering</h4>
+            <p>Drives are filtered by eligibility CGPA so students only see drives they qualify for.</p>
+          </div>
+          </div>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="card">
+            <div class="card-body d-flex flex-column">
+          <div>
+            <h4>Instant Notifications</h4>
+            <p>Status updates on shortlisting, placement, and withdrawals appear in the notification log.</p>
+          </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Credit  -->
+  <section class="credit-section">
+    <div class="credit-inner">
+      <div class="credit-tag">Built by</div>
+      <h2 class="credit-name">Aman Gupta</h2>
+      <p class="credit-detail">
+        <a href="mailto:24f2002969@ds.study.iitm.ac.in">24f2002969@ds.study.iitm.ac.in</a>
+      </p>
+      <p class="credit-course">Modern Application Development - 1 &nbsp;·&nbsp; IIT Madras Online Degree</p>
+      <div class="credit-divider"></div>
+      <a href="{{ url_for('auth.register_student') }}" class="btn-cta-primary" style="margin-top:1.5rem;display:inline-flex;">
+        Get Started →
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="home-footer">
+    <p>© 2025 SuperSet &nbsp;·&nbsp; MAD-1 Project &nbsp;·&nbsp; IIT Madras</p>
+    <p>Flask · SQLite · Bootstrap</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
